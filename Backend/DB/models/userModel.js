@@ -20,6 +20,14 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+    confirmEmail: {
+      type: Boolean,
+      default: false,
+    },
+     sendCode: {
+    type: String,
+    default: null,
+  }
   },
   { timestamps: true }
 );
