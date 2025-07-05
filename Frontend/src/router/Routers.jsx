@@ -5,6 +5,7 @@ import Login from "../pages/Login";
 import Layout from "../components/layout/layout";
 import Navbar from "../components/Navbar";
 import SignUpPage from "../pages/SignUpPage";
+import ProfilePage from "../pages/ProfilePage";
 
 const Routers = () => {
  return (
@@ -15,6 +16,8 @@ const Routers = () => {
         <Route path="/" element={ <Home /> } />
         <Route path="/login" element={<Login /> }/>
         <Route path="/SignUpPage" element={<SignUpPage /> }/>
+        <Route path="/ProfilePage" element={<ProfilePage /> }/>
+
       </Routes>
 
     </div>
