@@ -35,7 +35,7 @@ const ProfilePage = () => {
             <p className="mt-2 text-purple-200">Your profile information</p>
           </div>
 
-          {/* صورة البروفايل */}
+          
           <div className="flex flex-col items-center gap-4">
             <div className="relative">
               <img

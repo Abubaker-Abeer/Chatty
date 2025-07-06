@@ -50,8 +50,17 @@ export const login =async(req,res)=>{
         return res.status(400).json({message:"invalid data"})
     }
     const token = jwt.sign({id:user._id,userName:user.userName,role:user.role},process.env.LOGIN_SIGN)
-    return res.status(200).json({message:"success" ,token});
-
+return res.status(200).json({
+  message: "success",
+  token,
+  user: {
+    _id: user._id,
+    userName: user.userName,
+    email: user.email,
+    profilePic: user.profilePic,
+    role: user.role,
+  },
+});
 }
 export const sendCode = async (req, res) => {
 

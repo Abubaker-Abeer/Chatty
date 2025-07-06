@@ -1,23 +1,40 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff, Loader2, Lock, Mail, MessageSquare } from "lucide-react";
 import AuthImagePattern from "../components/AuthImagePattern";
+import { loginUser } from "../Api/auth";
+import { useAuthStore } from "../store/useAuthStore";
+import { toast, Toaster } from "react-hot-toast"; // ✅ إضافة المكتبة
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [isLoggingIn, setIsLoggingIn] = useState(false);
 
+  const login = useAuthStore((state) => state.login);
+  const navigate = useNavigate();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoggingIn(true);
-    setTimeout(() => {
-      console.log("Login info:", formData);
+
+    try {
+      const res = await loginUser(formData);
+      login(res.user);
+      toast.success("Logged in successfully!"); // ✅ تنبيه نجاح
+      navigate("/");
+    } catch (err) {
+      toast.error(err?.response?.data?.message || "Login failed"); // ✅ تنبيه فشل
+    } finally {
       setIsLoggingIn(false);
-    }, 1000);
+    }
   };
 
   return (
     <div className="h-screen grid lg:grid-cols-2 bg-purple-950 text-purple-100">
+      {/* ✅ مكون عرض التوست */}
+      <Toaster position="top-right" reverseOrder={false} />
+
       {/* Left Side - Form */}
       <div className="flex flex-col justify-center items-center p-6 sm:p-12">
         <div className="w-full max-w-md space-y-8">
@@ -100,7 +117,7 @@ const LoginPage = () => {
           <div className="text-center">
             <p className="text-purple-400">
               Don’t have an account?{" "}
-              <a href="#" className="underline text-purple-300 hover:text-purple-100 transition">
+              <a href="/SignUpPage" className="underline text-purple-300 hover:text-purple-100 transition">
                 Create account
               </a>
             </p>
@@ -109,12 +126,12 @@ const LoginPage = () => {
       </div>
 
       {/* Right Side - Pattern */}
-     <div className="flex flex-col justify-center items-center p-6 sm:p-12">
-  <AuthImagePattern
-    title="Welcome back!"
-    subtitle="Sign in to continue your conversations and catch up with your messages."
-  />
-</div>
+      <div className="flex flex-col justify-center items-center p-6 sm:p-12">
+        <AuthImagePattern
+          title="Welcome back!"
+          subtitle="Sign in to continue your conversations and catch up with your messages."
+        />
+      </div>
     </div>
   );
 };
