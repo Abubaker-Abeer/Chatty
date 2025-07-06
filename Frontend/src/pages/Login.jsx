@@ -4,7 +4,7 @@ import { Eye, EyeOff, Loader2, Lock, Mail, MessageSquare } from "lucide-react";
 import AuthImagePattern from "../components/AuthImagePattern";
 import { loginUser } from "../Api/auth";
 import { useAuthStore } from "../store/useAuthStore";
-import { toast, Toaster } from "react-hot-toast"; // ✅ إضافة المكتبة
+import { toast, Toaster } from "react-hot-toast"; 
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -21,24 +21,20 @@ const LoginPage = () => {
     try {
       const res = await loginUser(formData);
       login(res.user);
-      toast.success("Logged in successfully!"); // ✅ تنبيه نجاح
+      toast.success("Logged in successfully!"); 
       navigate("/");
     } catch (err) {
-      toast.error(err?.response?.data?.message || "Login failed"); // ✅ تنبيه فشل
+      toast.error(err?.response?.data?.message || "Login failed"); 
     } finally {
       setIsLoggingIn(false);
     }
   };
 
   return (
-    <div className="h-screen grid lg:grid-cols-2 bg-purple-950 text-purple-100">
-      {/* ✅ مكون عرض التوست */}
+    <div className="min-h-screen grid lg:grid-cols-2 bg-purple-950 text-purple-100">
       <Toaster position="top-right" reverseOrder={false} />
-
-      {/* Left Side - Form */}
       <div className="flex flex-col justify-center items-center p-6 sm:p-12">
         <div className="w-full max-w-md space-y-8">
-          {/* Logo */}
           <div className="text-center mb-8">
             <div className="flex flex-col items-center gap-2 group">
               <div className="w-12 h-12 rounded-xl bg-purple-700/30 flex items-center justify-center group-hover:bg-purple-600/30 transition-colors">
@@ -48,8 +44,6 @@ const LoginPage = () => {
               <p className="text-purple-400">Sign in to your account</p>
             </div>
           </div>
-
-          {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="form-control">
               <label className="label">
@@ -124,8 +118,6 @@ const LoginPage = () => {
           </div>
         </div>
       </div>
-
-      {/* Right Side - Pattern */}
       <div className="flex flex-col justify-center items-center p-6 sm:p-12">
         <AuthImagePattern
           title="Welcome back!"

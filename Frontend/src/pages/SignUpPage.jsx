@@ -12,6 +12,7 @@ import AuthImagePattern from "../components/AuthImagePattern";
 import { registerUser } from "../Api/auth";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "../store/useAuthStore"; 
 
 const SignUpPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -22,6 +23,7 @@ const SignUpPage = () => {
   });
   const [isSigningUp, setIsSigningUp] = useState(false);
   const navigate = useNavigate();
+  const login = useAuthStore((state) => state.login); 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,45 +31,34 @@ const SignUpPage = () => {
 
     try {
       const res = await registerUser(formData);
+      console.log("response:", res);
       toast.success("Account created successfully!");
-      console.log("Registered user:", res);
-      navigate("/login"); // ✅ التوجيه بعد التسجيل
+      login(res.user); 
+      navigate("/login"); 
     } catch (err) {
       toast.error(err.message || "Registration failed");
-      console.error("Registration error:", err);
     } finally {
       setIsSigningUp(false);
     }
   };
 
   return (
-    <div className="h-screen grid lg:grid-cols-2 bg-purple-950 text-purple-100">
-      {/* Left Side - Form */}
+    <div className="min-h-screen grid lg:grid-cols-2 bg-purple-950 text-purple-100">
       <div className="flex flex-col justify-center items-center p-6 sm:p-12">
         <div className="w-full max-w-md space-y-8">
-          {/* Logo */}
           <div className="text-center mb-8">
             <div className="flex flex-col items-center gap-2 group">
               <div className="w-12 h-12 rounded-xl bg-purple-700/30 flex items-center justify-center group-hover:bg-purple-600/30 transition-colors">
                 <MessageSquare className="w-6 h-6 text-purple-300" />
               </div>
-              <h1 className="text-2xl font-bold mt-2 text-purple-100">
-                Create Account
-              </h1>
-              <p className="text-purple-400">
-                Get started with your free account
-              </p>
+              <h1 className="text-2xl font-bold mt-2 text-purple-100">Create Account</h1>
+              <p className="text-purple-400">Get started with your free account</p>
             </div>
           </div>
-
-          {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Full Name */}
             <div className="form-control">
               <label className="label">
-                <span className="label-text font-medium text-purple-200">
-                  Full Name
-                </span>
+                <span className="label-text font-medium text-purple-200">Full Name</span>
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -84,13 +75,9 @@ const SignUpPage = () => {
                 />
               </div>
             </div>
-
-            {/* Email */}
             <div className="form-control">
               <label className="label">
-                <span className="label-text font-medium text-purple-200">
-                  Email
-                </span>
+                <span className="label-text font-medium text-purple-200">Email</span>
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -107,13 +94,9 @@ const SignUpPage = () => {
                 />
               </div>
             </div>
-
-            {/* Password */}
             <div className="form-control">
               <label className="label">
-                <span className="label-text font-medium text-purple-200">
-                  Password
-                </span>
+                <span className="label-text font-medium text-purple-200">Password</span>
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -141,8 +124,6 @@ const SignUpPage = () => {
                 </button>
               </div>
             </div>
-
-            {/* Submit Button */}
             <button
               type="submit"
               className="btn w-full bg-purple-700 hover:bg-purple-800 text-white border-0"
@@ -158,23 +139,16 @@ const SignUpPage = () => {
               )}
             </button>
           </form>
-
-          {/* Link to Login */}
           <div className="text-center">
             <p className="text-purple-400">
               Already have an account?{" "}
-              <a
-                href="/login"
-                className="underline text-purple-300 hover:text-purple-100 transition"
-              >
+              <a href="/login" className="underline text-purple-300 hover:text-purple-100 transition">
                 Sign in
               </a>
             </p>
           </div>
         </div>
       </div>
-
-      {/* Right Side - Pattern */}
       <div className="flex flex-col justify-center items-center p-6 sm:p-12">
         <AuthImagePattern
           title="Join our community"
