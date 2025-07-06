@@ -9,6 +9,9 @@ import {
   User,
 } from "lucide-react";
 import AuthImagePattern from "../components/AuthImagePattern";
+import { registerUser } from "../Api/auth";
+import { toast } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const SignUpPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -18,14 +21,23 @@ const SignUpPage = () => {
     password: "",
   });
   const [isSigningUp, setIsSigningUp] = useState(false);
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSigningUp(true);
-    setTimeout(() => {
-      console.log("Signup info:", formData);
+
+    try {
+      const res = await registerUser(formData);
+      toast.success("Account created successfully!");
+      console.log("Registered user:", res);
+      navigate("/login"); // ✅ التوجيه بعد التسجيل
+    } catch (err) {
+      toast.error(err.message || "Registration failed");
+      console.error("Registration error:", err);
+    } finally {
       setIsSigningUp(false);
-    }, 1000);
+    }
   };
 
   return (
@@ -39,8 +51,12 @@ const SignUpPage = () => {
               <div className="w-12 h-12 rounded-xl bg-purple-700/30 flex items-center justify-center group-hover:bg-purple-600/30 transition-colors">
                 <MessageSquare className="w-6 h-6 text-purple-300" />
               </div>
-              <h1 className="text-2xl font-bold mt-2 text-purple-100">Create Account</h1>
-              <p className="text-purple-400">Get started with your free account</p>
+              <h1 className="text-2xl font-bold mt-2 text-purple-100">
+                Create Account
+              </h1>
+              <p className="text-purple-400">
+                Get started with your free account
+              </p>
             </div>
           </div>
 
@@ -49,7 +65,9 @@ const SignUpPage = () => {
             {/* Full Name */}
             <div className="form-control">
               <label className="label">
-                <span className="label-text font-medium text-purple-200">Full Name</span>
+                <span className="label-text font-medium text-purple-200">
+                  Full Name
+                </span>
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -70,7 +88,9 @@ const SignUpPage = () => {
             {/* Email */}
             <div className="form-control">
               <label className="label">
-                <span className="label-text font-medium text-purple-200">Email</span>
+                <span className="label-text font-medium text-purple-200">
+                  Email
+                </span>
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -91,7 +111,9 @@ const SignUpPage = () => {
             {/* Password */}
             <div className="form-control">
               <label className="label">
-                <span className="label-text font-medium text-purple-200">Password</span>
+                <span className="label-text font-medium text-purple-200">
+                  Password
+                </span>
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -120,7 +142,7 @@ const SignUpPage = () => {
               </div>
             </div>
 
-            {/* Button */}
+            {/* Submit Button */}
             <button
               type="submit"
               className="btn w-full bg-purple-700 hover:bg-purple-800 text-white border-0"
@@ -137,10 +159,14 @@ const SignUpPage = () => {
             </button>
           </form>
 
+          {/* Link to Login */}
           <div className="text-center">
             <p className="text-purple-400">
               Already have an account?{" "}
-              <a href="/login" className="underline text-purple-300 hover:text-purple-100 transition">
+              <a
+                href="/login"
+                className="underline text-purple-300 hover:text-purple-100 transition"
+              >
                 Sign in
               </a>
             </p>
