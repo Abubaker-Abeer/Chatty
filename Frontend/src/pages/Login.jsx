@@ -14,22 +14,25 @@ const LoginPage = () => {
   const login = useAuthStore((state) => state.login);
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsLoggingIn(true);
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setIsLoggingIn(true);
 
-    try {
-      const res = await loginUser(formData);
-      login(res.user);
-      toast.success("Logged in successfully!"); 
-      navigate("/");
-    } catch (err) {
-      toast.error(err?.response?.data?.message || "Login failed"); 
-    } finally {
-      setIsLoggingIn(false);
-    }
-  };
+  try {
+    const res = await loginUser(formData); // هذا بيرجع { token, user }
 
+    localStorage.setItem("token", res.token);
+
+    login(res.user);
+
+    toast.success("Logged in successfully!");
+    navigate("/");
+  } catch (err) {
+    toast.error(err?.response?.data?.message || "Login failed");
+  } finally {
+    setIsLoggingIn(false);
+  }
+};
   return (
     <div className="min-h-screen grid lg:grid-cols-2 bg-purple-950 text-purple-100">
       <Toaster position="top-right" reverseOrder={false} />

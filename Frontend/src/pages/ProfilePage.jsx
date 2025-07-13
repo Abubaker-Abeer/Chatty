@@ -1,30 +1,66 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Camera, Mail, User } from "lucide-react";
+import axios from "axios";
+import { toast } from "react-hot-toast";
 
 const ProfilePage = () => {
-  // بيانات وهمية بدل authUser مؤقتًا
-  const authUser = {
-    fullName: "Abir Abubaker",
-    email: "abir@example.com",
-    profilePic: "",
-    createdAt: "2025-01-01",
-  };
-
+  const [authUser, setAuthUser] = useState(null);
   const [selectedImg, setSelectedImg] = useState(null);
-  const isUpdatingProfile = false;
+  const [isUpdatingProfile, setIsUpdatingProfile] = useState(false);
 
+  // Fetch profile
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const res = await axios.get("http://localhost:3000/profile", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setAuthUser(res.data.user);
+      } catch (err) {
+        console.error("Error fetching profile:", err);
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
+  // Upload image and update profile
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
+    setIsUpdatingProfile(true);
 
-    reader.onload = async () => {
-      const base64Image = reader.result;
-      setSelectedImg(base64Image);
-    };
+    const formData = new FormData();
+    formData.append("profilePic", file);
+
+    try {
+      const token = localStorage.getItem("token");
+
+      const res = await axios.put("http://localhost:3000/profile/update-profile", formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      setAuthUser(res.data.user);
+      setSelectedImg(null);
+      toast.success("Profile picture updated!");
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      toast.error("Failed to update profile picture");
+    } finally {
+      setIsUpdatingProfile(false);
+    }
   };
+
+  if (!authUser) {
+    return <div className="text-white text-center mt-10">Loading...</div>;
+  }
 
   return (
     <div className="min-h-screen pt-20 bg-purple-950 text-white">
@@ -35,7 +71,6 @@ const ProfilePage = () => {
             <p className="mt-2 text-purple-200">Your profile information</p>
           </div>
 
-          
           <div className="flex flex-col items-center gap-4">
             <div className="relative">
               <img
@@ -67,7 +102,7 @@ const ProfilePage = () => {
             </p>
           </div>
 
-          {/* البيانات */}
+          {/* البيانات */}  
           <div className="space-y-6">
             <div className="space-y-1.5">
               <div className="text-sm text-purple-200 flex items-center gap-2">
@@ -90,7 +125,7 @@ const ProfilePage = () => {
             </div>
           </div>
 
-          {/* معلومات الحساب */}
+          {/* معلومات الحساب */}  
           <div className="mt-6 bg-purple-800 rounded-xl p-6 border border-purple-500">
             <h2 className="text-lg font-medium mb-4 text-white">
               Account Information
@@ -98,7 +133,7 @@ const ProfilePage = () => {
             <div className="space-y-3 text-sm text-purple-200">
               <div className="flex items-center justify-between py-2 border-b border-purple-500">
                 <span>Member Since</span>
-                <span>{authUser.createdAt}</span>
+                <span>{new Date(authUser.createdAt).toLocaleDateString()}</span>
               </div>
               <div className="flex items-center justify-between py-2">
                 <span>Account Status</span>

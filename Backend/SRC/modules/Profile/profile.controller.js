@@ -27,7 +27,7 @@ export const updateProfile = async (req, res) => {
 };
 export const getProfile = async (req, res) => {
   try {
-    const user = req.user; // تم إضافته مسبقًا من خلال authMiddleware
+    const user = req.user; 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -36,7 +36,7 @@ export const getProfile = async (req, res) => {
       message: "success",
       user: {
         _id: user._id,
-        userName: user.userName,
+        fullName: user.fullName,
         email: user.email,
         profilePic: user.profilePic,
         createdAt: user.createdAt,
