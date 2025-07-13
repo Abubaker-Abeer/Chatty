@@ -43,7 +43,7 @@ const Routers = () => {
         <Route path="/login" element={!authUser ? <Login /> : <Navigate to="/" />} />
 
         {/* 👤 الملف الشخصي: فقط للمسجلين */}
-        <Route path="/ProfilePage" element={authUser ? <ProfilePage /> : <Navigate to="/login" />} />
+        <Route path="/Profile" element={authUser ? <ProfilePage /> : <Navigate to="/login" />} />
 
         {/* ⚙️ الإعدادات: فقط للمسجلين */}
          <Route path="/settings" element={<SettingsPage />} />
